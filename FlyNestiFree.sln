@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.34916.146
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlyNestiFree", "FlyNestiFree\FlyNestiFree.csproj", "{0F43B3C2-4CCA-4D0D-A952-20B271A416A9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlyNestyFree", "FlyNestiFree\FlyNestyFree.csproj", "{0F43B3C2-4CCA-4D0D-A952-20B271A416A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

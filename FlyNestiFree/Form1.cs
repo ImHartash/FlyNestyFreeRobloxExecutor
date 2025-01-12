@@ -17,7 +17,9 @@ namespace FlyNestiFree
         private bool isDragging = false;
         private Point startPoint = new Point(0, 0);
 
-        private String scriptsFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Scripts"); 
+        private String scriptsFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Scripts");
+
+        private LoadString loadString = null;
 
         [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
         private static extern IntPtr CreateRoundRectRgn
@@ -34,8 +36,11 @@ namespace FlyNestiFree
         {
             InitializeComponent();
             this.FormBorderStyle = FormBorderStyle.None;
-            Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 5, 5));
+            Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 10, 10));
             loadFileList();
+
+            scriptTextBox.Language = FastColoredTextBoxNS.Language.Lua;
+            scriptTextBox.ShowScrollBars = false;
         }
 
         private void loadFileList()
@@ -134,6 +139,51 @@ namespace FlyNestiFree
                         MessageBox.Show($"Internal error while saving file: {ex.Message}");
                     }
                 }
+            }
+        }
+
+        private void attach_Click(object sender, EventArgs e)
+        {
+            if (!API.execExecuteLuaScript(scriptTextBox.Text))
+            {
+                MessageBox.Show("Failed to attach Lua Code.");
+            } 
+            else
+            {
+                MessageBox.Show("Successfully attached lua code!");
+            }
+        }
+
+        private void inject_Click(object sender, EventArgs e)
+        {
+            bool result = API.execInject();
+            if (result)
+            {
+                //inject.Enabled = false;
+                MessageBox.Show("Successfully Injected!");
+            }
+            else
+            {
+                MessageBox.Show("Failed to inject.");
+            }
+        }
+
+        private void loadstring_Click(object sender, EventArgs e)
+        {
+            if (loadString ==  null)
+            {
+                loadString = new LoadString(this.scriptTextBox);
+                loadString.Show();
+
+                loadString.FormClosed += (a, b) =>
+                {
+                    loadString = null;
+                };
+            }
+            else
+            {
+                loadString.Close();
+                loadString = null;
             }
         }
     }
