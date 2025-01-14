@@ -21,6 +21,15 @@ namespace FlyNestiFree
 
         private LoadString loadString = null;
 
+        private Color targetColor;
+        private Color startColor;
+        private Timer timer;
+        private int animationStep;
+        private const int animationDuration = 30;
+        private const int steps = 20;
+
+        private Panel loadingOverlay;
+
         [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
         private static extern IntPtr CreateRoundRectRgn
         (
@@ -41,6 +50,13 @@ namespace FlyNestiFree
 
             scriptTextBox.Language = FastColoredTextBoxNS.Language.Lua;
             scriptTextBox.ShowScrollBars = false;
+
+            //timer = new Timer();
+            //timer.Interval = animationDuration / steps;
+            //timer.Tick += Timer_Tick;
+
+            //startColor = Color.Transparent;
+            //targetColor = Color.FromArgb(50, Color.Gray);    
         }
 
         private void loadFileList()
@@ -111,8 +127,8 @@ namespace FlyNestiFree
                 try
                 {
                     scriptTextBox.Text = File.ReadAllText(filePath);
-                } 
-                catch(Exception ex)
+                }
+                catch (Exception ex)
                 {
                     MessageBox.Show($"Internal error while reading file: {ex.Message}");
                 }
@@ -125,7 +141,7 @@ namespace FlyNestiFree
             {
                 saveFileDialog.InitialDirectory = scriptsFolder;
                 saveFileDialog.Filter = "Text Files (*.txt)|*.txt|Lua Files (*.lua)|*.lua|All Files (*.*)|*.*";
-                
+
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     try
@@ -147,7 +163,7 @@ namespace FlyNestiFree
             if (!API.execExecuteLuaScript(scriptTextBox.Text))
             {
                 MessageBox.Show("Failed to attach Lua Code.");
-            } 
+            }
             else
             {
                 MessageBox.Show("Successfully attached lua code!");
@@ -170,7 +186,7 @@ namespace FlyNestiFree
 
         private void loadstring_Click(object sender, EventArgs e)
         {
-            if (loadString ==  null)
+            if (loadString == null)
             {
                 loadString = new LoadString(this.scriptTextBox);
                 loadString.Show();
@@ -184,6 +200,44 @@ namespace FlyNestiFree
             {
                 loadString.Close();
                 loadString = null;
+            }
+        }
+
+        private void button_hover(object sender, EventArgs e)
+        {
+            base.OnMouseEnter(e);
+            Control control = sender as Control;
+            control.BackColor = Color.Transparent;
+        }
+
+        private void button_unhover(object sender, EventArgs e)
+        {
+            base.OnMouseLeave(e);
+            Control control = sender as Control;
+            control.BackColor = Color.Transparent;
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            if (animationStep < steps)
+            {
+                // Рассчитываем текущий цвет
+                int r = (int)(startColor.R + (targetColor.R - startColor.R) * (animationStep / (float)steps));
+                int g = (int)(startColor.G + (targetColor.G - startColor.G) * (animationStep / (float)steps));
+                int b = (int)(startColor.B + (targetColor.B - startColor.B) * (animationStep / (float)steps));
+                this.BackColor = Color.FromArgb(r, g, b);
+
+                animationStep++;
+            }
+            else
+            {
+                timer.Stop();
+                startColor = this.BackColor;
+
+                if (this.BackColor != targetColor)
+                {
+                    targetColor = Color.Red;
+                }
             }
         }
     }

@@ -120,6 +120,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="flynesty_logo.ico" />
+    <None Include="Resources\injection.png" />
+    <None Include="Resources\icons8-refresh-100.png" />
+    <None Include="Resources\c5b3d55c0912725c.png" />
+    <None Include="Resources\icons8-save-as-96.png" />
+    <None Include="Resources\icons8-erase-96.png" />
+    <None Include="Resources\icons8-start-90.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
